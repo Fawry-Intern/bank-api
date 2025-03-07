@@ -1,0 +1,58 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="create_user_role_enum" author="muhammad hussein" context="development">
+        <sql>
+            CREATE TYPE user_role AS ENUM ('CUSTOMER', 'ADMIN');
+        </sql>
+    </changeSet>
+
+    <changeSet id="create__transaction_enum" author="muhammad hussein">
+        <sql>
+            CREATE TYPE transaction_type_enum AS ENUM ('DEPOSIT', 'WITHDRAWAL');
+        </sql>
+    </changeSet>
+
+    <changeSet id="create__user_status_enum" author="muhammad hussein" context="development">
+        <sql>
+            CREATE TYPE user_status_enum AS ENUM ('ACTIVE', 'INACTIVE', 'SUSPENDED');
+        </sql>
+    </changeSet>
+
+    <changeSet id="create__account_status_enum" author="muhammad hussein" context="development">
+        <sql>
+            CREATE TYPE account_status_enum AS ENUM ('ACTIVE', 'INACTIVE', 'CLOSED');
+        </sql>
+    </changeSet>
+
+    <changeSet id="create_users_tbl" author="muhammad hussein" context="development">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users"/>
+            </not>
+        </preConditions>
+        <sqlFile path="db/changelog/sql/users_v.0.0.0.sql"/>
+    </changeSet>
+
+    <changeSet id="create_accounts_tbl" author="muhammad hussein">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="accounts"/>
+            </not>
+        </preConditions>
+        <sqlFile path="db/changelog/sql/accounts_v.0.0.1.sql"/>
+    </changeSet>
+
+    <changeSet id="create_transactions_tbl" author="muhammad hussein">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="transactions"/>
+            </not>
+        </preConditions>
+        <sqlFile path="db/changelog/sql/transactions_v.0.0.2.sql"/>
+    </changeSet>
+</databaseChangeLog>
