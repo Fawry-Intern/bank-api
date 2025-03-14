@@ -35,12 +35,12 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long accountId;
+    private Long id;
 
     @NotNull(message = "User ID is required")
     @JoinColumn(name = "user_id", nullable = false)
     @OneToOne
-    private User id;
+    private User user;
 
     @Pattern(regexp = "^[0-9]{16,20}$", message = "Card number must be between 16 and 20 digits")
     @Column(length = 20)
@@ -54,7 +54,7 @@ public class Account {
     @NotNull(message = "Account status is required")
     @Column(length = 20)
     @Enumerated(EnumType.STRING)
-    private AccountStatus accountStatus = AccountStatus.ACTIVE;
+    private AccountStatus status = AccountStatus.ACTIVE;
 
     @NotNull(message = "CVV is required")
     @Min(value = 100, message = "CVV must be a 3 or 4 digit number")

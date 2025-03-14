@@ -43,10 +43,6 @@ public class User {
     @OneToOne
     private Account account;
 
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 255, message = "Username must be between 3 and 255 characters")
-    @Column(name = "username", unique = true, nullable = false)
-    private String username;
 
     @NotBlank(message = "First name is required")
     @Size(max = 20, message = "First name must not exceed 20 characters")
@@ -70,7 +66,7 @@ public class User {
     @NotNull(message = "User status is required")
     @Enumerated(EnumType.STRING)
     @Column(name = "user_status", nullable = false)
-    private UserStatus userStatus = UserStatus.ACTIVE;
+    private UserStatus status = UserStatus.ACTIVE;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
