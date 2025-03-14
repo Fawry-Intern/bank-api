@@ -40,7 +40,7 @@ public class Account {
     @NotNull(message = "User ID is required")
     @JoinColumn(name = "user_id", nullable = false)
     @OneToOne
-    private User userId;
+    private User id;
 
     @Pattern(regexp = "^[0-9]{16,20}$", message = "Card number must be between 16 and 20 digits")
     @Column(length = 20)

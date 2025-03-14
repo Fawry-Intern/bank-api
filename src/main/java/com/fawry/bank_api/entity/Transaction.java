@@ -22,7 +22,7 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long transactionId;
+    private Long id;
 
     @NotNull(message = "Account is required")
     @ManyToOne(fetch = FetchType.LAZY)

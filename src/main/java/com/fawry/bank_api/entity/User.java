@@ -36,7 +36,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long userId;
+    private Long id;
 
 
     @JoinColumn(name = "account_id", nullable = false)
@@ -65,7 +65,7 @@ public class User {
 
     @NotBlank(message = "Address is required")
     @Column(name = "user_address", nullable = false, columnDefinition = "TEXT")
-    private String userAddress;
+    private String address;
 
     @NotNull(message = "User status is required")
     @Enumerated(EnumType.STRING)
