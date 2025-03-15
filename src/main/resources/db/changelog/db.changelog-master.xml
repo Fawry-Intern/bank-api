@@ -7,7 +7,7 @@
 
     <changeSet id="create_user_role_enum" author="muhammad hussein" context="development">
         <sql>
-            CREATE TYPE user_role AS ENUM ('CUSTOMER', 'ADMIN');
+            CREATE TYPE user_role AS ENUM ('USER', 'ADMIN');
         </sql>
     </changeSet>
 
@@ -17,17 +17,6 @@
         </sql>
     </changeSet>
 
-    <changeSet id="create__user_status_enum" author="muhammad hussein" context="development">
-        <sql>
-            CREATE TYPE user_status_enum AS ENUM ('ACTIVE', 'INACTIVE', 'SUSPENDED');
-        </sql>
-    </changeSet>
-
-    <changeSet id="create__account_status_enum" author="muhammad hussein" context="development">
-        <sql>
-            CREATE TYPE account_status_enum AS ENUM ('ACTIVE', 'INACTIVE', 'CLOSED');
-        </sql>
-    </changeSet>
 
     <changeSet id="create_users_tbl" author="muhammad hussein" context="development">
         <preConditions onFail="MARK_RAN">

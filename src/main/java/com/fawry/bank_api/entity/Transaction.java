@@ -16,7 +16,6 @@ import java.time.Instant;
 @Table(name = "transactions")
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class Transaction {
 
@@ -47,4 +46,59 @@ public class Transaction {
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private Instant createdAt;
+
+    public Long getId() {
+        return id;
+    }
+
+    public @NotNull(message = "Account is required") Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(@NotNull(message = "Account is required") Account account) {
+        this.account = account;
+    }
+
+    public @NotNull(message = "Transaction type is required") TransactionType getType() {
+        return type;
+    }
+
+    public void setType(@NotNull(message = "Transaction type is required") TransactionType type) {
+        this.type = type;
+    }
+
+    public @Size(max = 1000, message = "Transaction note cannot exceed 1000 characters") String getNote() {
+        return note;
+    }
+
+    public void setNote(@Size(max = 1000, message = "Transaction note cannot exceed 1000 characters") String note) {
+        this.note = note;
+    }
+
+    public @NotNull(message = "Transaction amount is required") @DecimalMin(value = "0.01", message = "Transaction amount must be greater than 0") @Digits(integer = 13, fraction = 2, message = "Invalid amount format") BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(@NotNull(message = "Transaction amount is required") @DecimalMin(value = "0.01", message = "Transaction amount must be greater than 0") @Digits(integer = 13, fraction = 2, message = "Invalid amount format") BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+
+
+    public Transaction( Account account, TransactionType type, String note, BigDecimal amount) {
+
+        this.account = account;
+        this.type = type;
+        this.note = note;
+        this.amount = amount;
+
+    }
+    public Transaction()
+    {
+
+    }
 }

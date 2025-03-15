@@ -1,12 +1,9 @@
 server:
   port: 8081
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8765/eureka
+
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/bank_db
+    url: jdbc:postgresql://192.168.99.100:5432/bank_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -17,3 +14,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+security:
+  jwt:
+    secret-key: 9SlLvC1uDlj0vN2e5Wh9a692xd4QZuPaoGDHhhvD404OEJI5g/x6iiNaoM/z7PUfoYHwG5pE35426585AWFFXA==
+
+    expiration-time: 900000
