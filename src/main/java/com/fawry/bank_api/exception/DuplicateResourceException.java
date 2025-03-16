@@ -1,5 +1,8 @@
 package com.fawry.bank_api.exception;
 
+import lombok.Getter;
+
+@Getter
 public class DuplicateResourceException extends RuntimeException {
     
     private final ResourceType resource;
@@ -8,8 +11,5 @@ public class DuplicateResourceException extends RuntimeException {
         super(message);
         this.resource = resource;
     }
-    
-    public ResourceType getResource() {
-        return resource;
-    }
+
 }

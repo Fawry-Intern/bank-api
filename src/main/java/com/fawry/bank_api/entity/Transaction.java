@@ -30,17 +30,17 @@ public class Transaction {
 
     @NotNull(message = "Transaction type is required")
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "transaction_type",nullable = false)
     private TransactionType type;
 
     @Size(max = 1000, message = "Transaction note cannot exceed 1000 characters")
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "note", columnDefinition = "TEXT")
     private String note;
 
     @NotNull(message = "Transaction amount is required")
     @DecimalMin(value = "0.01", message = "Transaction amount must be greater than 0")
     @Digits(integer = 13, fraction = 2, message = "Invalid amount format")
-    @Column(precision = 15, scale = 2, nullable = false)
+    @Column(name = "transaction_amount", precision = 15, scale = 2, nullable = false)
     private BigDecimal amount;
 
     @Column(name = "created_at", updatable = false)
