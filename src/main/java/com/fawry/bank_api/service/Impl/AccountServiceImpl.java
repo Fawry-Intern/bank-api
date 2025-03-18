@@ -5,7 +5,10 @@ import com.fawry.bank_api.dto.account.AccountDetailsResponse;
 import com.fawry.bank_api.dto.transaction.TransactionDetailsResponse;
 import com.fawry.bank_api.entity.Account;
 import com.fawry.bank_api.entity.User;
+import com.fawry.bank_api.enums.ResourceType;
+import com.fawry.bank_api.exception.DuplicateResourceException;
 import com.fawry.bank_api.exception.EntityNotFoundException;
+import com.fawry.bank_api.exception.IllegalActionException;
 import com.fawry.bank_api.mapper.AccountMapper;
 import com.fawry.bank_api.mapper.TransactionMapper;
 import com.fawry.bank_api.repository.AccountRepository;
@@ -76,7 +79,7 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + request.userId()));
 
         if (user.getAccount() != null) {
-            throw new IllegalArgumentException("User already has an account");
+            throw new DuplicateResourceException("User already has an account", ResourceType.USER);
         }
 
         String cardNumber = request.cardNumber();
@@ -107,6 +110,9 @@ public class AccountServiceImpl implements AccountService {
     public AccountDetailsResponse activateAccount(Long accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + accountId));
+        if (account.getIsActive()) {
+            throw new IllegalActionException("Account is already active");
+        }
         account.setIsActive(true);
         account = accountRepository.save(account);
         return accountMapper.toAccountResponse(account);
@@ -118,6 +124,9 @@ public class AccountServiceImpl implements AccountService {
     public AccountDetailsResponse deactivateAccount(Long accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + accountId));
+        if (!account.getIsActive()) {
+            throw new IllegalActionException("Account is already inactive");
+        }
         account.setIsActive(false);
         account = accountRepository.save(account);
         return accountMapper.toAccountResponse(account);
