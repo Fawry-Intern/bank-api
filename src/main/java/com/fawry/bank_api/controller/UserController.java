@@ -45,7 +45,7 @@ public class UserController {
                 userService.resetUserAccountPassword(passwordResetRequest));
     }
 
-    //admin authorities only
+
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDetailsResponse>> getAllUsers()

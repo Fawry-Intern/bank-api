@@ -7,6 +7,7 @@ import com.fawry.bank_api.entity.Account;
 import com.fawry.bank_api.entity.Transaction;
 import com.fawry.bank_api.enums.TransactionType;
 import com.fawry.bank_api.exception.EntityNotFoundException;
+import com.fawry.bank_api.exception.IllegalActionException;
 import com.fawry.bank_api.exception.InsufficientFundsException;
 import com.fawry.bank_api.mapper.TransactionMapper;
 import com.fawry.bank_api.repository.AccountRepository;
@@ -42,7 +43,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + depositRequest.accountId()));
 
         if (!account.getIsActive()) {
-            throw new IllegalStateException("Cannot deposit to an inactive account");
+            throw new IllegalActionException("Cannot deposit to an inactive account");
         }
 
         BigDecimal newBalance = account.getBalance().add(depositRequest.amount());
@@ -57,7 +58,6 @@ public class TransactionServiceImpl implements TransactionService {
         );
 
         transaction = transactionRepository.save(transaction);
-        System.out.println(transaction);
         return transactionMapper.toTransactionResponse(transaction);
     }
 
@@ -68,7 +68,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + withdrawRequest.accountId()));
 
         if (!account.getIsActive()) {
-            throw new IllegalStateException("Cannot withdraw from an inactive account");
+            throw new IllegalActionException("Cannot withdraw from an inactive account");
         }
 
         if (account.getBalance().compareTo(withdrawRequest.amount()) < 0) {
