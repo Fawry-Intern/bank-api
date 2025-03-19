@@ -41,7 +41,7 @@ public class UserController {
                 userService.resetUserAccountPassword(passwordResetRequest));
     }
 
-    //admin authorities only
+
     @GetMapping
     public ResponseEntity<List<UserDetailsResponse>> getAllUsers()
     {

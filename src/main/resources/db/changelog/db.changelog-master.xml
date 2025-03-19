@@ -5,20 +5,20 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
-    <changeSet id="create_user_role_enum" author="muhammad hussein" context="development">
+    <changeSet id="create_user_role_enum" author="Hossam Hatem" context="development">
         <sql>
             CREATE TYPE user_role AS ENUM ('USER', 'ADMIN');
         </sql>
     </changeSet>
 
-    <changeSet id="create__transaction_enum" author="muhammad hussein">
+    <changeSet id="create__transaction_enum" author="Hossam Hatem">
         <sql>
             CREATE TYPE transaction_type_enum AS ENUM ('DEPOSIT', 'WITHDRAWAL');
         </sql>
     </changeSet>
 
 
-    <changeSet id="create_users_tbl" author="muhammad hussein" context="development">
+    <changeSet id="create_users_tbl" author="Hossam Hatem" context="development">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="users"/>
@@ -27,7 +27,7 @@
         <sqlFile path="db/changelog/sql/users_v.0.0.0.sql"/>
     </changeSet>
 
-    <changeSet id="create_accounts_tbl" author="muhammad hussein">
+    <changeSet id="create_accounts_tbl" author="Hossam Hatem">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="accounts"/>
@@ -36,7 +36,7 @@
         <sqlFile path="db/changelog/sql/accounts_v.0.0.1.sql"/>
     </changeSet>
 
-    <changeSet id="create_transactions_tbl" author="muhammad hussein">
+    <changeSet id="create_transactions_tbl" author="Hossam Hatem">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="transactions"/>

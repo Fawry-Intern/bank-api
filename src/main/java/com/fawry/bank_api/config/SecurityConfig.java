@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,11 +26,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig {
 
-
     private final UserRepository userRepository;
-    public SecurityConfig(UserRepository userRepository)
-    {
-        this.userRepository=userRepository;
+
+    public SecurityConfig(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     private static final String[] AUTH_WHITELIST = {
@@ -40,10 +38,10 @@ public class SecurityConfig {
     private static final String[] AUTH_ADMIN = {
             "/api/user/activate/**",
             "/api/user/deactivate/**",
-            "/api/user" // Endpoint to get all users
+            "/api/user"
     };
     private static final String[] AUTH_USER = {
-            "/api/user/{userId}", // Get profile
+            "/api/user/{userId}",
             "/api/user/change-password",
             "/api/user/reset-password"
     };
@@ -59,8 +57,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(configurer -> configurer
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                        .requestMatchers(AUTH_ADMIN).hasRole("ADMIN")  // Only admins can access admin routes
-                        .requestMatchers(AUTH_USER).hasAnyRole("ADMIN","USER")  // Client access
+                        .requestMatchers(AUTH_ADMIN).hasRole("ADMIN")
+                        .requestMatchers(AUTH_USER).hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated()
                 );
 
@@ -69,6 +67,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -90,6 +89,6 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("user with this email doesn't exist"));
+                .orElseThrow(() -> new EntityNotFoundException("User with this email doesn't exist"));
     }
 }
