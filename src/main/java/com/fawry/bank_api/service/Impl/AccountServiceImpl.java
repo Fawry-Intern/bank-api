@@ -46,7 +46,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public List<AccountDetailsResponse> getAllAccounts() {
         return accountRepository.findAll().stream()
                 .map(accountMapper::toAccountResponse)
@@ -102,7 +101,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public AccountDetailsResponse activateAccount(Long accountId) {
         Account account = accountRepository.findById(accountId)
@@ -113,7 +111,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public AccountDetailsResponse deactivateAccount(Long accountId) {
         Account account = accountRepository.findById(accountId)

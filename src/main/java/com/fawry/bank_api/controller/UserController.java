@@ -7,6 +7,7 @@ import com.fawry.bank_api.dto.user.UserDetailsResponse;
 import com.fawry.bank_api.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +22,14 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<UserDetailsResponse> getUserProfile(@PathVariable Long userId)
     {
         return ResponseEntity.ok(userService.getUserProfile(userId));
     }
 
     @PutMapping("/change-password")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<Long>changeUserAccountPassword
             (@Valid @RequestBody PasswordChangeRequest passwordChangeRequest)
     {
@@ -34,6 +37,7 @@ public class UserController {
                 userService.changeUserAccountPassword(passwordChangeRequest));
     }
     @PutMapping("/reset-password")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<Long> resetUserAccountPassword
             (@Valid @RequestBody PasswordResetRequest passwordResetRequest)
     {
@@ -43,17 +47,20 @@ public class UserController {
 
     //admin authorities only
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDetailsResponse>> getAllUsers()
     {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
     @PutMapping("/activate/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDetailsResponse> activateUser( @PathVariable Long userId)
     {
         return ResponseEntity.ok(userService.activateUser(userId));
     }
     @PutMapping("/deactivate/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDetailsResponse> deactivateUser
             ( @PathVariable Long userId)
     {

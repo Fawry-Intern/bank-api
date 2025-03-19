@@ -3,6 +3,7 @@ package com.fawry.bank_api.service.Impl;
 import com.fawry.bank_api.dto.auth.AuthenticationRequest;
 import com.fawry.bank_api.dto.auth.AuthenticationResponse;
 import com.fawry.bank_api.dto.auth.RegisterRequest;
+import com.fawry.bank_api.dto.user.UserDetailsResponse;
 import com.fawry.bank_api.entity.User;
 import com.fawry.bank_api.exception.DuplicateResourceException;
 import com.fawry.bank_api.exception.EntityNotFoundException;
@@ -26,13 +27,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final AuthenticationMapper authenticationMapper;
+    private final UserMapper userMapper;
 
-    public AuthenticationServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, JwtService jwtService,AuthenticationMapper authenticationMapper) {
+    public AuthenticationServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, JwtService jwtService, AuthenticationMapper authenticationMapper, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.authenticationMapper = authenticationMapper;
 
+        this.userMapper = userMapper;
     }
 
 
@@ -61,6 +64,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user=userRepository.findByEmail(request.email()).orElseThrow(()->new EntityNotFoundException("user not found"));
         String token=jwtService.generateToken(user);
 
-        return authenticationMapper.toAuthResponse(token, user.getId());
+        return authenticationMapper.toAuthResponse(token, user.getId(),user.getRole());
     }
 }
