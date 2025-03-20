@@ -79,9 +79,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public Long resetUserAccountPassword(PasswordResetRequest passwordResetRequest) {
-        if (!PasswordValidationHelper.isValid(passwordResetRequest.newPassword())) {
-            throw new IllegalActionException("Password does not meet security requirements");
-        }
+
 
         User authenticatedUser = getAuthenticatedUser();
         User user = getUserEntity(passwordResetRequest.userId());
@@ -104,9 +102,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public Long changeUserAccountPassword(PasswordChangeRequest passwordChangeRequest) {
-        if (!PasswordValidationHelper.isValid(passwordChangeRequest.newPassword())) {
-            throw new IllegalActionException("Password does not meet security requirements");
-        }
 
         User authenticatedUser = getAuthenticatedUser();
         User user = getUserEntity(passwordChangeRequest.userId());

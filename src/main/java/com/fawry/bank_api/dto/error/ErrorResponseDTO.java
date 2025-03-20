@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Data
 @Builder
@@ -14,6 +15,7 @@ public class ErrorResponseDTO {
     private String error;
     private String message;
     private String path;
+    private Map<String,String> fieldErrors;
 
     public static ErrorResponseDTO createErrorResponse(
             HttpStatus status,

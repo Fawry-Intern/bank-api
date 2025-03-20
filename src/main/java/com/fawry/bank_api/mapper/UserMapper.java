@@ -10,13 +10,15 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
     public UserDetailsResponse toUserResponse(User user) {
-        return new UserDetailsResponse(
+        return
+                new UserDetailsResponse(
                 user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
                 user.getPhoneNumber(),
-                user.getAddress()
+                user.getAddress(),
+                user.getIsActive()
         );
     }
 

@@ -22,15 +22,16 @@ public class AuthenticationMapper {
     }
     public User toUserEntity(RegisterRequest request)
     {
-        return new User(
-                request.firstName(),
-                request.lastName(),
-                request.phoneNumber(),
-                request.address(),
-                true,
-                request.email(),
-               passwordEncoder.encode( request.password()),
-                request.role()
-        );
+        return User.builder()
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .email(request.email())
+                .phoneNumber(request.phoneNumber())
+                .address(request.address())
+                .role(UserRole.ADMIN)
+                .isActive(true)
+                .password(passwordEncoder.encode(request.password()))
+                .build();
+
     }
 }

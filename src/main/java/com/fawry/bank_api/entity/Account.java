@@ -27,6 +27,7 @@ import java.time.Instant;
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Account {
 
     @Id
@@ -58,65 +59,5 @@ public class Account {
     @CreationTimestamp
     private Instant createdAt;
 
-    public Long getId() {
-        return id;
-    }
 
-
-    public @NotNull(message = "User ID is required") User getUser() {
-        return user;
-    }
-
-    public void setUser(@NotNull(message = "User ID is required") User user) {
-        this.user = user;
-    }
-
-    public @Pattern(regexp = "^[0-9]{16,20}$", message = "Card number must be between 16 and 20 digits") String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(@Pattern(regexp = "^[0-9]{16,20}$", message = "Card number must be between 16 and 20 digits") String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public @NotNull(message = "Balance cannot be null") @PositiveOrZero(message = "Balance must be zero or positive") BigDecimal getBalance() {
-        return balance;
-    }
-
-    public void setBalance(@NotNull(message = "Balance cannot be null") @PositiveOrZero(message = "Balance must be zero or positive") BigDecimal balance) {
-        this.balance = balance;
-    }
-
-
-
-    public @NotNull(message = "CVV is required") @Min(value = 100, message = "CVV must be a 3 or 4 digit number") @Max(value = 9999, message = "CVV must be a 3 or 4 digit number") String getCvv() {
-        return cvv;
-    }
-
-    public void setCvv(@NotNull(message = "CVV is required") @Min(value = 100, message = "CVV must be a 3 or 4 digit number") @Max(value = 9999, message = "CVV must be a 3 or 4 digit number") String cvv) {
-        this.cvv = cvv;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Account( User user, String cardNumber, BigDecimal balance, Boolean isActive, String cvv, Instant createdAt) {
-
-        this.user = user;
-        this.cardNumber = cardNumber;
-        this.balance = balance;
-        this.isActive=isActive;
-        this.cvv = cvv;
-        this.createdAt = createdAt;
-    }
-
-    public Account()
-    {
-
-    }
 }

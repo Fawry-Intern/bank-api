@@ -1,5 +1,6 @@
 package com.fawry.bank_api.dto.auth;
 
+import com.fawry.bank_api.annotations.ValidPassword;
 import com.fawry.bank_api.enums.UserRole;
 import jakarta.validation.constraints.*;
 
@@ -17,6 +18,7 @@ public record RegisterRequest
                 @Email(message = "The email address is invalid.")
                 String email,
                 @NotBlank(message = "password mustn't be blank")
+                @ValidPassword
                 String password,
 
                 @NotEmpty(message = "The phoneNumber is required.")
@@ -25,8 +27,6 @@ public record RegisterRequest
                 String phoneNumber,
 
                 @NotEmpty(message = "The address is required.")
-                String address,
-
-                UserRole role
+                String address
         ) {
 }
