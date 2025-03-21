@@ -8,7 +8,8 @@ public record UserDetailsResponse
            String lastName,
            String email,
            String phoneNumber,
-           String address
+           String address,
+           Boolean isActive
         ) {
 
 }

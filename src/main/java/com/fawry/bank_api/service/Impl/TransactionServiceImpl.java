@@ -50,12 +50,12 @@ public class TransactionServiceImpl implements TransactionService {
         account.setBalance(newBalance);
         accountRepository.save(account);
 
-        Transaction transaction = new Transaction(
-                account,
-                TransactionType.DEPOSIT,
-                depositRequest.note(),
-                depositRequest.amount()
-        );
+        Transaction transaction = Transaction.builder()
+                .account(account)
+                .type(TransactionType.DEPOSIT)
+                .note(depositRequest.note())
+                .amount(depositRequest.amount())
+                .build();
 
         transaction = transactionRepository.save(transaction);
         return transactionMapper.toTransactionResponse(transaction);
@@ -79,12 +79,12 @@ public class TransactionServiceImpl implements TransactionService {
         account.setBalance(newBalance);
         accountRepository.save(account);
 
-        Transaction transaction = new Transaction(
-                account,
-                TransactionType.WITHDRAW,
-                withdrawRequest.note(),
-                withdrawRequest.amount()
-        );
+        Transaction transaction = Transaction.builder()
+                .account(account)
+                .type(TransactionType.WITHDRAW)
+                .note(withdrawRequest.note())
+                .amount(withdrawRequest.amount())
+                .build();
 
         transaction = transactionRepository.save(transaction);
         return transactionMapper.toTransactionResponse(transaction);

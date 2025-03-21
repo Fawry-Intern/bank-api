@@ -4,6 +4,7 @@ import com.fawry.bank_api.dto.auth.AuthenticationRequest;
 import com.fawry.bank_api.dto.auth.AuthenticationResponse;
 import com.fawry.bank_api.dto.auth.RegisterRequest;
 import com.fawry.bank_api.entity.User;
+import com.fawry.bank_api.enums.UserRole;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -15,21 +16,22 @@ public class AuthenticationMapper {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public AuthenticationResponse toAuthResponse(String token,Long userId)
+    public AuthenticationResponse toAuthResponse(String token, Long userId, UserRole role)
     {
-        return new AuthenticationResponse(token,userId);
+        return new AuthenticationResponse(token,userId,role);
     }
     public User toUserEntity(RegisterRequest request)
     {
-        return new User(
-                request.firstName(),
-                request.lastName(),
-                request.phoneNumber(),
-                request.address(),
-                true,
-                request.email(),
-               passwordEncoder.encode( request.password()),
-                request.role()
-        );
+        return User.builder()
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .email(request.email())
+                .phoneNumber(request.phoneNumber())
+                .address(request.address())
+                .role(UserRole.ADMIN)
+                .isActive(true)
+                .password(passwordEncoder.encode(request.password()))
+                .build();
+
     }
 }

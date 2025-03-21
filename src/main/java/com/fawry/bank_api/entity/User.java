@@ -12,6 +12,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,6 +28,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User  implements UserDetails {
 
     @Id
@@ -56,8 +64,8 @@ public class User  implements UserDetails {
     @Column(name = "user_address", nullable = false, columnDefinition = "TEXT")
     private String address;
 
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;
+    @Column(name = "is_active")
+    private Boolean isActive = Boolean.TRUE;
 
 
     @NotBlank(message = "Email is required")
@@ -78,99 +86,6 @@ public class User  implements UserDetails {
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
-
-    public Long getId() {
-        return id;
-    }
-
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    public @NotBlank(message = "First name is required") @Size(max = 20, message = "First name must not exceed 20 characters") String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(@NotBlank(message = "First name is required") @Size(max = 20, message = "First name must not exceed 20 characters") String firstName) {
-        this.firstName = firstName;
-    }
-
-    public @NotBlank(message = "Last name is required") @Size(max = 20, message = "Last name must not exceed 20 characters") String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(@NotBlank(message = "Last name is required") @Size(max = 20, message = "Last name must not exceed 20 characters") String lastName) {
-        this.lastName = lastName;
-    }
-
-    public @NotBlank(message = "Phone number is required") @Pattern(regexp = "^\\+?[0-9]{10,20}$", message = "Invalid phone number format") String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(@NotBlank(message = "Phone number is required") @Pattern(regexp = "^\\+?[0-9]{10,20}$", message = "Invalid phone number format") String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public @NotBlank(message = "Address is required") String getAddress() {
-        return address;
-    }
-
-    public void setAddress(@NotBlank(message = "Address is required") String address) {
-        this.address = address;
-    }
-
-
-    public @NotBlank(message = "Email is required") @Email(message = "Invalid email format") String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@NotBlank(message = "Email is required") @Email(message = "Invalid email format") String email) {
-        this.email = email;
-    }
-
-
-    public void setPassword(@NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String password) {
-        this.password = password;
-    }
-
-    public @NotNull(message = "User role is required") UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(@NotNull(message = "User role is required") UserRole role) {
-        this.role = role;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public User( String firstName, String lastName, String phoneNumber, String address, Boolean isActive, String email, String password, UserRole role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.isActive=isActive;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
-    public User(){
-
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -207,7 +122,5 @@ public class User  implements UserDetails {
         return isActive;
     }
 
-    public void setIsActive(boolean isActive) {
-    this.isActive=isActive;
-    }
+
 }

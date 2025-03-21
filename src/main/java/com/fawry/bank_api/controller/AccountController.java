@@ -21,27 +21,30 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<AccountDetailsResponse>> getAllAccounts() {
-        return ResponseEntity.ok(accountService.getAllAccounts());
-    }
-
     @GetMapping("/{accountId}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<AccountDetailsResponse> getAccountById(@PathVariable Long accountId) {
         return ResponseEntity.ok(accountService.getAccountById(accountId));
     }
 
     @GetMapping("/{accountId}/transactions")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<TransactionDetailsResponse>> getAccountTransactions(@PathVariable Long accountId) {
         return ResponseEntity.ok(accountService.getAccountTransactions(accountId));
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<AccountDetailsResponse> createAccount(@Valid @RequestBody AccountCreationRequest request) {
         return new ResponseEntity<>(accountService.createAccount(request), HttpStatus.CREATED);
     }
 
+//admin authorities only
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<AccountDetailsResponse>> getAllAccounts() {
+        return ResponseEntity.ok(accountService.getAllAccounts());
+    }
     @PutMapping("/activate/{accountId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AccountDetailsResponse> activateAccount(@PathVariable Long accountId) {

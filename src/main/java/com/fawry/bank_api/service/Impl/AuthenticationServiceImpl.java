@@ -34,9 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public Boolean register(RegisterRequest request) {
-        if (!PasswordValidationHelper.isValid(request.password())) {
-            throw new IllegalActionException("Password does not meet security requirements");
-        }
+
         User user = authenticationMapper.toUserEntity(request);
 
         if (userRepository.existsByEmail(user.getEmail())) {
@@ -48,15 +46,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        if (!PasswordValidationHelper.isValid(request.password())) {
-            throw new IllegalActionException("Password does not meet security requirements");
-        }
+
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
 
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         String token = jwtService.generateToken(user);
 
-        return authenticationMapper.toAuthResponse(token, user.getId());
+        return authenticationMapper.toAuthResponse(token, user.getId(),user.getRole());
     }
 }
