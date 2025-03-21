@@ -107,6 +107,7 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ErrorCode.UNAUTHORIZED, e.getMessage(), UNAUTHORIZED);
     }
 
+
     /**
      * Builds the common error response structure for all exceptions.
      */

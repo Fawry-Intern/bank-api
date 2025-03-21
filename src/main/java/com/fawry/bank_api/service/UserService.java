@@ -12,10 +12,11 @@ public interface UserService {
     //admin authorities only
 
     List<UserDetailsResponse> findAllUsers();
+    List<UserDetailsResponse> getUsersWithActiveAccounts();
+  List<UserDetailsResponse> getUsersWithUnActiveAccounts();
+  Long activateUser(Long userId);
 
-    UserDetailsResponse activateUser(Long userId);
-
-    UserDetailsResponse deactivateUser(Long userId);
+    Long deactivateUser(Long userId);
 
 
 

@@ -3,7 +3,6 @@ package com.fawry.bank_api.controller;
 import com.fawry.bank_api.dto.auth.AuthenticationRequest;
 import com.fawry.bank_api.dto.auth.AuthenticationResponse;
 import com.fawry.bank_api.dto.auth.RegisterRequest;
-import com.fawry.bank_api.dto.user.UserDetailsResponse;
 import com.fawry.bank_api.service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

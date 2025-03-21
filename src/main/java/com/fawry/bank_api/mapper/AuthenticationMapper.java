@@ -28,7 +28,7 @@ public class AuthenticationMapper {
                 .email(request.email())
                 .phoneNumber(request.phoneNumber())
                 .address(request.address())
-                .role(UserRole.ADMIN)
+                .role(UserRole.USER)
                 .isActive(true)
                 .password(passwordEncoder.encode(request.password()))
                 .build();

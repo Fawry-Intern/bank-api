@@ -37,6 +37,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDetailsResponse> getUsersWithActiveAccounts() {
+        return userRepository.getUsersWithActiveAccounts().stream().map(userMapper::toUserResponse).toList();
+    }
+
+    @Override
+    public List<UserDetailsResponse> getUsersWithUnActiveAccounts() {
+        return userRepository.getUsersWithUnActiveAccounts().stream().map(userMapper::toUserResponse).toList();
+    }
+
+    @Override
     public UserDetailsResponse getUserProfile(Long userId) {
         User authenticatedUser = getAuthenticatedUser();
         User user = getUserEntity(userId);
@@ -50,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDetailsResponse activateUser(Long userId) {
+    public Long activateUser(Long userId) {
         User user = getUserEntity(userId);
         User authenticatedUser = getAuthenticatedUser();
 
@@ -59,12 +69,12 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setIsActive(true);
-        return userMapper.toUserResponse(user);
+        return user.getId();
     }
 
     @Transactional
     @Override
-    public UserDetailsResponse deactivateUser(Long userId) {
+    public Long deactivateUser(Long userId) {
         User authenticatedUser = getAuthenticatedUser();
         User user = getUserEntity(userId);
 
@@ -73,7 +83,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setIsActive(false);
-        return userMapper.toUserResponse(user);
+        return user.getId();
     }
 
     @Transactional
