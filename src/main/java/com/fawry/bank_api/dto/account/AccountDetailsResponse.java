@@ -9,6 +9,6 @@ public record AccountDetailsResponse(
         String cardNumber,
         BigDecimal balance,
         Boolean isActive,
-        Instant createdAt
-) {
+        Instant createdAt,
+        String cvv) {
 }
