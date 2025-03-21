@@ -52,16 +52,28 @@ public class UserController {
     {
         return ResponseEntity.ok(userService.findAllUsers());
     }
+    @GetMapping("/active-account")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserDetailsResponse>> getUsersWithActiveAccounts()
+    {
+        return ResponseEntity.ok(userService.getUsersWithActiveAccounts());
+    }
+    @GetMapping("un-active-account")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserDetailsResponse>> getUsersWithUnActiveAccounts()
+    {
+        return ResponseEntity.ok(userService.getUsersWithUnActiveAccounts());
+    }
 
     @PutMapping("/activate/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDetailsResponse> activateUser( @PathVariable Long userId)
+    public ResponseEntity<Long> activateUser( @PathVariable Long userId)
     {
         return ResponseEntity.ok(userService.activateUser(userId));
     }
     @PutMapping("/deactivate/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDetailsResponse> deactivateUser
+    public ResponseEntity<Long> deactivateUser
             ( @PathVariable Long userId)
     {
         return ResponseEntity.ok(userService.deactivateUser(userId));
