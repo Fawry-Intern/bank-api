@@ -62,4 +62,16 @@ public class AccountController {
     public ResponseEntity<AccountDetailsResponse> deactivateAccount(@PathVariable Long accountId) {
         return ResponseEntity.ok(accountService.deactivateAccount(accountId));
     }
+
+    @PutMapping("/user/{userId}/activate")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AccountDetailsResponse> activateAccountByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(accountService.activateAccountByUserId(userId));
+    }
+
+    @PutMapping("/user/{userId}/deactivate")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AccountDetailsResponse> deactivateAccountByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(accountService.deactivateAccountByUserId(userId));
+    }
 }

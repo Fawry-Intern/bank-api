@@ -14,5 +14,6 @@ public interface AccountService {
     AccountDetailsResponse activateAccount(Long accountId);
     AccountDetailsResponse deactivateAccount(Long accountId);
     AccountDetailsResponse getAccountByUserId(Long userId);
-
+    AccountDetailsResponse activateAccountByUserId(Long userId);
+    AccountDetailsResponse deactivateAccountByUserId(Long userId);
 }

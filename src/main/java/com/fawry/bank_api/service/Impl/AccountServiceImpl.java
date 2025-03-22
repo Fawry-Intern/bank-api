@@ -127,6 +127,45 @@ public class AccountServiceImpl implements AccountService {
         account = accountRepository.save(account);
         return accountMapper.toAccountResponse(account);
     }
+    @Override
+    @Transactional
+    public AccountDetailsResponse activateAccountByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+
+        if (user.getAccount() == null) {
+            throw new EntityNotFoundException("No account found for user with ID: " + userId);
+        }
+
+        Account account = user.getAccount();
+        if (account.getIsActive()) {
+            throw new IllegalActionException("Account is already active");
+        }
+
+        account.setIsActive(true);
+        account = accountRepository.save(account);
+        return accountMapper.toAccountResponse(account);
+    }
+
+    @Override
+    @Transactional
+    public AccountDetailsResponse deactivateAccountByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+
+        if (user.getAccount() == null) {
+            throw new EntityNotFoundException("No account found for user with ID: " + userId);
+        }
+
+        Account account = user.getAccount();
+        if (!account.getIsActive()) {
+            throw new IllegalActionException("Account is already inactive");
+        }
+
+        account.setIsActive(false);
+        account = accountRepository.save(account);
+        return accountMapper.toAccountResponse(account);
+    }
 
     @Override
     @Transactional
