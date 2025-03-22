@@ -27,6 +27,12 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAccountById(accountId));
     }
 
+    @GetMapping("/user/{userId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<AccountDetailsResponse> getAccountByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(accountService.getAccountByUserId(userId));
+    }
+
     @GetMapping("/{accountId}/transactions")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<TransactionDetailsResponse>> getAccountTransactions(@PathVariable Long accountId) {
@@ -39,7 +45,7 @@ public class AccountController {
         return new ResponseEntity<>(accountService.createAccount(request), HttpStatus.CREATED);
     }
 
-//admin authorities only
+    //admin authorities only
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<AccountDetailsResponse>> getAllAccounts() {

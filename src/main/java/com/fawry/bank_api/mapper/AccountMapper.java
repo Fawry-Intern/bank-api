@@ -14,7 +14,8 @@ public class AccountMapper {
                 account.getCardNumber(),
                 account.getBalance(),
                 account.getIsActive(),
-                account.getCreatedAt()
+                account.getCreatedAt(),
+                account.getCvv()
         );
     }
 }

@@ -13,4 +13,6 @@ public interface AccountService {
     AccountDetailsResponse createAccount(AccountCreationRequest request);
     AccountDetailsResponse activateAccount(Long accountId);
     AccountDetailsResponse deactivateAccount(Long accountId);
+    AccountDetailsResponse getAccountByUserId(Long userId);
+
 }

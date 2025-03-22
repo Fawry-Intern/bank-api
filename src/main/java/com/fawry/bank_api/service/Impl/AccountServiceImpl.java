@@ -63,6 +63,18 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public AccountDetailsResponse getAccountByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+
+        if (user.getAccount() == null) {
+            throw new EntityNotFoundException("No account found for user with ID: " + userId);
+        }
+
+        return accountMapper.toAccountResponse(user.getAccount());
+    }
+
+    @Override
     public List<TransactionDetailsResponse> getAccountTransactions(Long accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + accountId));
@@ -130,7 +142,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private String generateCardNumber() {
-        StringBuilder builder = new StringBuilder("4"); // Starting with 4 for Visa-like numbers
+        StringBuilder builder = new StringBuilder("4");
         for (int i = 1; i < 16; i++) {
             builder.append(secureRandom.nextInt(10));
         }
@@ -138,7 +150,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private String generateCvv() {
-        int cvvValue = 100 + secureRandom.nextInt(900); // 3-digit number between 100-999
+        int cvvValue = 100 + secureRandom.nextInt(900);
         return String.valueOf(cvvValue);
     }
 }
