@@ -4,21 +4,28 @@ package com.fawry.bank_api.controller;
 import com.fawry.bank_api.dto.user.PasswordChangeRequest;
 import com.fawry.bank_api.dto.user.PasswordResetRequest;
 import com.fawry.bank_api.dto.user.UserDetailsResponse;
+import com.fawry.bank_api.service.Impl.PasswordResetServiceImpl;
 import com.fawry.bank_api.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
 @RequestMapping("api/user")
 public class UserController {
     private final UserService userService;
+    private final PasswordResetServiceImpl passwordResetService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PasswordResetServiceImpl passwordResetService) {
         this.userService = userService;
+
+        this.passwordResetService = passwordResetService;
     }
 
     @GetMapping("/{userId}")
@@ -34,15 +41,21 @@ public class UserController {
             (@Valid @RequestBody PasswordChangeRequest passwordChangeRequest)
     {
         return ResponseEntity.ok(
-                userService.changeUserAccountPassword(passwordChangeRequest));
+                passwordResetService.changeUserAccountPassword(passwordChangeRequest));
     }
     @PutMapping("/reset-password")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<Long> resetUserAccountPassword
-            (@Valid @RequestBody PasswordResetRequest passwordResetRequest)
-    {
-        return ResponseEntity.ok(
-                userService.resetUserAccountPassword(passwordResetRequest));
+    public ResponseEntity<String> resetUserAccountPassword
+            (@Valid @RequestBody PasswordResetRequest passwordResetRequest) throws NoSuchAlgorithmException {
+        passwordResetService.resetPassword(passwordResetRequest);
+        return
+                new ResponseEntity<>("password has been set successfully", HttpStatus.OK);
+    }
+    @PostMapping("/reset-password-request")
+    public ResponseEntity<String> resetPasswordRequest
+            (@Valid @Email @RequestBody String email) throws NoSuchAlgorithmException {
+        passwordResetService.passwordResetRequest(email);
+        return
+                new ResponseEntity<>("check your email, a request has been sent to you ", HttpStatus.OK);
     }
 
 

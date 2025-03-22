@@ -21,8 +21,6 @@ public interface UserService {
 
 
     //common user activities
-    Long resetUserAccountPassword(PasswordResetRequest passwordResetRequest);
-    Long changeUserAccountPassword(PasswordChangeRequest passwordChangeRequest);
     UserDetailsResponse getUserProfile(Long userId);
 
 }

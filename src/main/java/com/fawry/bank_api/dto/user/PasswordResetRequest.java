@@ -5,13 +5,12 @@ import jakarta.validation.constraints.NotNull;
 
 public record PasswordResetRequest
         (
-                @NotNull Long userId,
+                @NotNull
+                String token,
+
                 @NotNull
                 @ValidPassword
-                String newPassword,
-                @NotNull
-                @ValidPassword
-                String confirmedPassword
+                String newPassword
         )
 {
 }

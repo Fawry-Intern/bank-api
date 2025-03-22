@@ -44,4 +44,15 @@
         </preConditions>
         <sqlFile path="db/changelog/sql/transactions_v.0.0.2.sql"/>
     </changeSet>
+
+    <changeSet id="create_password_change_requests_tbl1" author="Mustafa Tarek">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="password_change_requests"/>
+            </not>
+        </preConditions>
+        <sqlFile path="db/changelog/sql/password_change_requests_v.0.0.0.sql"/>
+    </changeSet>
+
+
 </databaseChangeLog>
