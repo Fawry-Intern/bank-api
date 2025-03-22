@@ -3,6 +3,6 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
   profiles:
-    active: dev
+    active: test
   application:
        name: Bank-Api

@@ -10,6 +10,8 @@ import com.fawry.bank_api.repository.UserRepository;
 import com.fawry.bank_api.service.PasswordResetService;
 import com.fawry.bank_api.exception.EntityNotFoundException;
 import com.fawry.bank_api.util.PasswordValidationHelper;
+import com.fawry.kafka.events.ResetPasswordEvent;
+import com.fawry.kafka.producers.ResetPasswordProducer;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,17 +34,19 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     private final UserRepository userRepository;
     private final PasswordChangeRequestsRepository passwordChangeRequestsRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ResetPasswordProducer producer;
 
     @Value("${frontend.url}")
-    private String frontendUrl; // Inject frontend URL (e.g., http://localhost)
+    private String frontendUrl;
 
     @Value("${frontend.port}")
-    private int frontendPort; // Inject frontend Port (e.g., 4200)
+    private int frontendPort;
 
-    public PasswordResetServiceImpl(UserRepository userRepository, PasswordChangeRequestsRepository passwordChangeRequestsRepository, PasswordEncoder passwordEncoder) {
+    public PasswordResetServiceImpl(UserRepository userRepository, PasswordChangeRequestsRepository passwordChangeRequestsRepository, PasswordEncoder passwordEncoder, ResetPasswordProducer producer) {
         this.userRepository = userRepository;
         this.passwordChangeRequestsRepository = passwordChangeRequestsRepository;
         this.passwordEncoder = passwordEncoder;
+        this.producer = producer;
     }
 
     @Override
@@ -50,9 +54,10 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
+
         String token = generateAndStoreToken(user);
 
-        sendPasswordResetEmail(user, token);
+        sendPasswordResetEvent(user, token);
 
         return true;
     }
@@ -79,12 +84,13 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         passwordChangeRequestsRepository.save(new PasswordChangeRequests(hashedToken, expirationTime, user));
     }
 
-    private void sendPasswordResetEmail(User user, String token) {
-        String resetLink = String.format("%s:%d/reset-password?token=%s", frontendUrl, frontendPort, token);
+    private void sendPasswordResetEvent(User user, String token) {
+        String resetLink = createNewResetLink(token);
 
-        // Implement your email sending logic here (e.g., using JavaMailSender)
-        System.out.println("Sending reset link to " + user.getEmail());
-        System.out.println("Reset Link: " + resetLink);
+        System.out.println(resetLink);
+       var even = createNewInstance(user, resetLink);
+
+       producer.produceResetPasswordEvent(even);
     }
 
 
@@ -153,5 +159,13 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
     private Boolean isSameUser(Long userId, Long authenticatedUserId) {
         return userId.equals(authenticatedUserId);
+    }
+
+    private ResetPasswordEvent createNewInstance(User user, String resetLink) {
+        return new ResetPasswordEvent(user.getUsername(), user.getEmail(), resetLink);
+    }
+
+    private String createNewResetLink(String token) {
+        return String.format("%s:%d/reset-password?token=%s", frontendUrl, frontendPort, token);
     }
 }
