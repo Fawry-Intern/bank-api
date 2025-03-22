@@ -52,7 +52,7 @@ public class UserController {
     }
     @PostMapping("/reset-password-request")
     public ResponseEntity<String> resetPasswordRequest
-            (@Valid @Email @RequestBody String email) throws NoSuchAlgorithmException {
+            (@Valid @Email @RequestParam String email) throws NoSuchAlgorithmException {
         passwordResetService.passwordResetRequest(email);
         return
                 new ResponseEntity<>("check your email, a request has been sent to you ", HttpStatus.OK);
