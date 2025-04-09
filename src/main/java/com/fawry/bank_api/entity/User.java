@@ -1,5 +1,6 @@
 package com.fawry.bank_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fawry.bank_api.enums.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,6 +43,7 @@ public class User  implements UserDetails {
 
     @JoinColumn(name = "account_id")
     @OneToOne
+    @JsonIgnore
     private Account account;
 
 
