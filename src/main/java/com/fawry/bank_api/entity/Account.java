@@ -1,5 +1,6 @@
 package com.fawry.bank_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,6 +38,7 @@ public class Account {
     @NotNull(message = "User ID is required")
     @JoinColumn(name = "user_id", nullable = false)
     @OneToOne
+    @JsonIgnore
     private User user;
 
     @Pattern(regexp = "^[0-9]{16,20}$", message = "Card number must be between 16 and 20 digits")
