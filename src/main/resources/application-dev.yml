@@ -4,7 +4,7 @@ server:
 
 frontend:
   url: http://localhost
-  port: 4200
+  port: 4201
 
 spring:
   datasource:

@@ -14,6 +14,7 @@ import com.fawry.kafka.events.ResetPasswordEvent;
 import com.fawry.kafka.producers.ResetPasswordProducer;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -93,19 +94,6 @@ public class PasswordResetServiceImpl implements PasswordResetService {
        producer.produceResetPasswordEvent(even);
     }
 
-
-    public Boolean verifyResetToken(String token) throws NoSuchAlgorithmException {
-        String hashedToken = hashToken(token);
-        Optional<PasswordChangeRequests> request = passwordChangeRequestsRepository.findByToken(hashedToken);
-        if (request.isEmpty()) {
-            throw new EntityNotFoundException("Password reset request not found");
-        }
-
-        if (request.get().isExpired()) {
-            throw new IllegalStateException("Token has expired");
-        }
-        return true;
-    }
 
     @Transactional
     public Boolean resetPassword(PasswordResetRequest passwordResetRequest) throws NoSuchAlgorithmException {
