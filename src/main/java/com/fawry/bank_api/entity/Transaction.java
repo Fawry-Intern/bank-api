@@ -1,5 +1,6 @@
 package com.fawry.bank_api.entity;
 
+import com.fawry.bank_api.dto.transaction.TransactionState;
 import com.fawry.bank_api.enums.TransactionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -11,6 +12,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+
+import static jakarta.persistence.EnumType.STRING;
 
 @Entity
 @Table(name = "transactions")
@@ -29,10 +32,17 @@ public class Transaction {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
+    @Column(name = "order_id", nullable = false)
+    private Long orderId;
+
     @NotNull(message = "Transaction type is required")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     @Column(name = "transaction_type",nullable = false)
     private TransactionType type;
+
+    @Enumerated(STRING)
+    @Column(name = "state", nullable = false)
+    private TransactionState state;
 
     @Size(max = 1000, message = "Transaction note cannot exceed 1000 characters")
     @Column(name = "note", columnDefinition = "TEXT")

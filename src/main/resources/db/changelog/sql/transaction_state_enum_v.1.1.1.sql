@@ -1,0 +1,1 @@
+CREATE TYPE transaction_state AS ENUM ('CREATED', 'CANCELED');

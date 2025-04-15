@@ -12,7 +12,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
@@ -26,14 +26,16 @@ spring:
     consumer:
       enable-auto-commit: true
       bootstrap-servers: localhost:9092
-      group-id: bank_store_id
+      group-id: bank_store_id, bank_shipping_id
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         allow.auto.create.topics: true
         spring.json.trusted.packages: "com.fawry.kafka.events"
-        spring.json.type.mapping: storeCreatedEventDTO:com.fawry.kafka.events.StoreCreatedEventDTO
+        spring.json.type.mapping:
+         storeCreatedEventDTO:com.fawry.kafka.events.StoreCreatedEventDTO,
+         orderCanceledEventDTO:com.fawry.kafka.events.OrderCanceledEventDTO
 
     producer:
       bootstrap-servers: localhost:9092

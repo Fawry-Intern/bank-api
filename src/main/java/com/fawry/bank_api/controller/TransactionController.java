@@ -19,11 +19,11 @@ public class TransactionController {
 
     @PostMapping("/deposit")
     public ResponseEntity<TransactionDetailsResponse> deposit(@Valid @RequestBody DepositRequest request) {
-        return ResponseEntity.ok(transactionService.deposit(request));
+        return ResponseEntity.ok(transactionService.deposit(request, 0L));
     }
 
     @PostMapping("/withdraw")
     public ResponseEntity<TransactionDetailsResponse> withdraw(@Valid @RequestBody WithdrawRequest request) {
-        return ResponseEntity.ok(transactionService.withdraw(request));
+        return ResponseEntity.ok(transactionService.withdraw(request, 0L));
     }
 }

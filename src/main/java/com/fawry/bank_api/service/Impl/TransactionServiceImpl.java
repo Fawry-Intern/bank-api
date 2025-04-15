@@ -2,6 +2,7 @@ package com.fawry.bank_api.service.Impl;
 
 import com.fawry.bank_api.dto.transaction.DepositRequest;
 import com.fawry.bank_api.dto.transaction.TransactionDetailsResponse;
+import com.fawry.bank_api.dto.transaction.TransactionState;
 import com.fawry.bank_api.dto.transaction.WithdrawRequest;
 import com.fawry.bank_api.entity.Account;
 import com.fawry.bank_api.entity.Transaction;
@@ -31,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -66,6 +68,7 @@ public class TransactionServiceImpl implements TransactionService {
     public void makePayment(StoreCreatedEventDTO orderRequest) {
         try{
             log.info("store consume successfully {}", orderRequest);
+            long orderId = orderRequest.getOrderId();
             PaymentMethod paymentMethod = orderRequest.getPaymentMethod();
             PaymentDetails paymentDetails = paymentMethod.details();
             String cardNumber = paymentDetails.getNumber();
@@ -88,8 +91,8 @@ public class TransactionServiceImpl implements TransactionService {
                     .note("new place order " + orderRequest.getOrderId())
                     .build();
 
-            withdraw(withdrawRequest);
-            deposit(depositRequest);
+            withdraw(withdrawRequest, orderId);
+            deposit(depositRequest, orderId);
 
             PaymentCreatedEventDTO paymentCreatedEventDTO =
                     PaymentCreatedEventDTO.builder()
@@ -112,7 +115,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    public TransactionDetailsResponse deposit(DepositRequest depositRequest) {
+    public TransactionDetailsResponse deposit(DepositRequest depositRequest, Long orderId) {
         Account account = accountRepository.findById(depositRequest.accountId())
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + depositRequest.accountId()));
 
@@ -130,6 +133,8 @@ public class TransactionServiceImpl implements TransactionService {
                 .type(TransactionType.DEPOSIT)
                 .note(depositRequest.note())
                 .amount(roundedAmount)
+                .orderId(orderId)
+                .state(TransactionState.CREATED)
                 .build();
 
         transaction = transactionRepository.save(transaction);
@@ -138,7 +143,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public TransactionDetailsResponse withdraw(WithdrawRequest withdrawRequest) {
+    public TransactionDetailsResponse withdraw(WithdrawRequest withdrawRequest, Long orderId) {
         Account account = accountRepository.findById(withdrawRequest.accountId())
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + withdrawRequest.accountId()));
 
@@ -160,10 +165,57 @@ public class TransactionServiceImpl implements TransactionService {
                 .type(TransactionType.WITHDRAW)
                 .note(withdrawRequest.note())
                 .amount(roundedAmount)
+                .orderId(orderId)
+                .state(TransactionState.CREATED)
                 .build();
 
         Transaction saveTransaction = transactionRepository.save(transaction);
         return transactionMapper.toTransactionResponse(transaction);
     }
 
+
+    @Transactional
+    @KafkaListener(topics = "shipping-canceled-events", groupId = "bank_shipping_id")
+    public void cancelReservation(OrderCanceledEventDTO canceledEvent) {
+        log.info("Received OrderCanceledConfirmedEventDTO for order: {}", canceledEvent.getOrderId());
+        List<Transaction> transactions = getOrderTransaction(canceledEvent.getOrderId());
+        for (var transaction : transactions) {
+            if (transaction.getType().equals(TransactionType.WITHDRAW)) {
+                refundCustomer(transaction);
+            } else {
+                cancelMerchantDeposit(transaction);
+            }
+            transaction.setState(TransactionState.CANCELED);
+            transactionRepository.save(transaction);
+        }
+        paymentCancellationPublisher.publishOrderCanceledEvent(canceledEvent);
+        log.info("Transaction for order {} has been canceled and refunded", canceledEvent.getOrderId());
+    }
+
+    private void refundCustomer(Transaction transaction) {
+        var account = getAccount(transaction.getAccount().getId());
+        var transactionAmount = transaction.getAmount();
+        transaction.setAmount(BigDecimal.valueOf(0.01));
+        account.setBalance(account.getBalance().add((transactionAmount)));
+        accountRepository.save(account);
+        log.info("Refunding customer for transaction: {}", transaction.getId());
+    }
+
+    private void cancelMerchantDeposit(Transaction transaction) {
+        var account = getAccount(transaction.getAccount().getId());
+        var transactionAmount = transaction.getAmount();
+        transaction.setAmount(BigDecimal.valueOf(0.01));
+        account.setBalance(account.getBalance().subtract((transactionAmount)));
+        accountRepository.save(account);
+        log.info("Canceling merchant deposit for transaction: {}", transaction.getId());
+    }
+
+    private List<Transaction> getOrderTransaction(Long orderId) {
+        return transactionRepository.findOrderTransactionByOrderId(orderId);
+    }
+
+    private Account getAccount(Long accountId) {
+        return accountRepository.findById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + accountId));
+    }
 }

@@ -7,6 +7,6 @@ import com.fawry.kafka.events.StoreCreatedEventDTO;
 
 public interface TransactionService {
     void makePayment(StoreCreatedEventDTO orderRequest);
-    TransactionDetailsResponse deposit(DepositRequest depositRequest);
-    TransactionDetailsResponse withdraw(WithdrawRequest withdrawRequest);
+    TransactionDetailsResponse deposit(DepositRequest depositRequest, Long orderId);
+    TransactionDetailsResponse withdraw(WithdrawRequest withdrawRequest, Long orderId);
 }
