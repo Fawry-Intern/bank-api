@@ -54,5 +54,30 @@
         <sqlFile path="db/changelog/sql/password_change_requests_v.0.0.0.sql"/>
     </changeSet>
 
+    <changeSet id="order_id_column" author="Muhammad Hussein" context="development">
+        <preConditions>
+            <not>
+                <columnExists tableName="transactions" columnName="order_id"/>
+            </not>
+        </preConditions>
+        <sqlFile path="db/changelog/sql/order_id_column_v.0.1.1.sql"/>
+    </changeSet>
+
+    <changeSet id="create_transaction_state_enum" author="Muhammad Hussein" context="development">
+        <sqlFile path="db/changelog/sql/transaction_state_enum_v.1.1.1.sql"/>
+    </changeSet>
+
+    <changeSet id="create_transaction_state_enum_column" author="Muhammad Hussein" context="development">
+        <preConditions>
+            <not>
+                <columnExists tableName="transactions" columnName="state"/>
+            </not>
+        </preConditions>
+        <sqlFile path="db/changelog/sql/transaction_state_column_v.1.1.2.sql"/>
+    </changeSet>
+
+    <changeSet id="update_transaction_state_enum" author="Muhammad Hussein" context="development">
+        <sqlFile path="db/changelog/sql/update_state_type_v.1.2.2.sql"/>
+    </changeSet>
 
 </databaseChangeLog>

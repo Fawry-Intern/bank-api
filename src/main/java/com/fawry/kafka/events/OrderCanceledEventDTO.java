@@ -1,25 +1,20 @@
 package com.fawry.kafka.events;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
+@Setter
+@Builder
 @ToString
 public class OrderCanceledEventDTO implements Serializable {
 
-    private final Long orderId;
-    private final String reason;
-    private final String customerEmail;
-
-
-
-    public static OrderCanceledEventDTO newInstance(Long orderId, String reason, String customerEmail) {
-        return new OrderCanceledEventDTO(orderId, reason, customerEmail);
-    }
+    private Long orderId;
+    private String reason;
+    private String customerEmail;
 
 }
 

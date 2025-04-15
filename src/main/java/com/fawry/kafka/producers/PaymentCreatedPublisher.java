@@ -23,6 +23,5 @@ public class PaymentCreatedPublisher {
                         .setHeader(TOPIC, "payment-created-events")
                         .build();
         kafkaTemplate.send(message);
-
     }
 }
