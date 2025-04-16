@@ -10,7 +10,7 @@ import java.util.Optional;
 public class UserMapper {
 
     public UserDetailsResponse toUserResponse(User user) {
-        // Check if the account is not null before accessing its properties
+
         return new UserDetailsResponse(
                 user.getId(),
                 user.getFirstName(),

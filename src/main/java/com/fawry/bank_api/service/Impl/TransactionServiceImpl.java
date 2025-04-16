@@ -44,11 +44,6 @@ public class TransactionServiceImpl implements TransactionService {
     private final PaymentCancellationPublisher paymentCancellationPublisher;
     private final PaymentCreatedPublisher paymentCreatedPublisher;
 
-    @Value("${custom.merchant.card-number}")
-    private String MERCHANT_CARD_NUMBER;
-
-    @Value("${custom.merchant.cvv}")
-    private String MERCHANT_CVV;
 
     @Autowired
     public TransactionServiceImpl(
@@ -74,7 +69,7 @@ public class TransactionServiceImpl implements TransactionService {
             String cardNumber = paymentDetails.getNumber();
             String cvv = paymentDetails.getCvv();
             Account account = accountRepository.findByCardNumberAndCvv(cardNumber, cvv)
-                    .orElseThrow(() -> new EntityNotFoundException(String.format("Account not found with cardNumber {} and cvv {}", cardNumber, cvv)));
+                    .orElseThrow(() -> new EntityNotFoundException(String.format("Customer Account not found with cardNumber {} and cvv {}", cardNumber, cvv)));
 
             WithdrawRequest withdrawRequest = WithdrawRequest
                     .builder()
@@ -83,8 +78,8 @@ public class TransactionServiceImpl implements TransactionService {
                     .note("payment order number " + orderRequest.getOrderId())
                     .build();
 
-            Account merchant = accountRepository.findByCardNumberAndCvv(MERCHANT_CARD_NUMBER, MERCHANT_CVV)
-                    .orElseThrow(() -> new EntityNotFoundException(String.format("Account not found with cardNumber {} and cvv {}", cardNumber, cvv)));
+            Account merchant = accountRepository.findByUserEmail(orderRequest.getMerchantEmail())
+                    .orElseThrow(() -> new EntityNotFoundException(String.format("Merchant Account not found with cardNumber {} and cvv {}", cardNumber, cvv)));
             DepositRequest depositRequest = DepositRequest.builder()
                     .accountId(merchant.getId())
                     .amount(orderRequest.getPaymentAmount())

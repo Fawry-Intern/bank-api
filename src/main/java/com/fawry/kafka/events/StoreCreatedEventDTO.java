@@ -22,4 +22,5 @@ public class StoreCreatedEventDTO implements Serializable {
     private AddressDetails addressDetails;
     private BigDecimal paymentAmount;
     private PaymentMethod paymentMethod;
+    private String merchantEmail;
 }

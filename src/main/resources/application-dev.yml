@@ -1,11 +1,9 @@
 server:
-  url: http://localhost
   port: 8081
-
-frontend:
-  url: http://localhost
-  port: 4201
-
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/bank_db
@@ -19,6 +17,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
   # Kafka Config
   kafka:
     listener:
@@ -51,3 +50,9 @@ security:
   jwt:
     secret-key: 9SlLvC1uDlj0vN2e5Wh9a692xd4QZuPaoGDHhhvD404OEJI5g/x6iiNaoM/z7PUfoYHwG5pE35426585AWFFXA==
     expiration-time: 900000
+
+
+frontend:
+  url: http://localhost
+  port: 4201
+
